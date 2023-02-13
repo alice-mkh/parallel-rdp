@@ -50,6 +50,7 @@
 #include "gfx_m64p.hpp"
 #include "glguts.hpp"
 #include "parallel_imp.hpp"
+#include "util/logging.hpp"
 
 #include <mupen64plus/m64p_types.h>
 #include <mupen64plus/m64p_config.h>
@@ -111,8 +112,10 @@ void DebugMessage(int level, const char *message, ...)
     char msgbuf[1024];
     va_list args;
 
-    if (debug_callback == NULL)
+    if (debug_callback == nullptr)
+    {
         return;
+    }
 
     va_start(args, message);
     vsprintf(msgbuf, message, args);
@@ -121,6 +124,46 @@ void DebugMessage(int level, const char *message, ...)
 
     va_end(args);
 }
+
+class MupenLoggingInterface : public Util::LoggingInterface
+{
+public:
+    bool log(const char *tag, const char *fmt, va_list va)
+    {
+        char buf[1024];
+        int  buf_len = 0;
+        int  level = M64MSG_VERBOSE;
+
+        // copy string to buf
+        vsnprintf(buf, sizeof(buf), fmt, va);
+
+        // determine log level
+        if (strncmp(tag, "[INFO]", 6) == 0)
+        {
+            level = M64MSG_INFO;
+        }
+        else if (strncmp(tag, "[WARN]", 6) == 0)
+        {
+            level = M64MSG_WARNING;
+        }
+        else if (strncmp(tag, "[ERROR]", 7) == 0)
+        {
+            level = M64MSG_ERROR;
+        }
+
+        // strip newline
+        buf_len = strlen(buf);
+        if (buf[buf_len - 1] == '\n')
+        {
+            buf[buf_len - 1] = '\0';
+        }
+
+        DebugMessage(level, buf);
+        return true;
+    }
+};
+
+static MupenLoggingInterface l_LoggingInterface;
 
 EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle _CoreLibHandle, void *Context,
                                      void (*DebugCallback)(void *, int, const char *))
@@ -164,6 +207,9 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle _CoreLibHandle, void *Co
     ConfigSetDefaultBool(configVideoParallel, KEY_NATIVETEXTLOD, 0, "Use native texture LOD computation when upscaling, effectively a LOD bias");
     ConfigSetDefaultBool(configVideoParallel, KEY_NATIVETEXTRECT, 1, "Native resolution TEX_RECT. TEX_RECT primitives should generally be rendered at native resolution to avoid seams");
     ConfigSaveSection("Video-Parallel");
+
+    // set logging interface
+    Util::set_thread_logging_interface(&l_LoggingInterface);
 
     plugin_initialized = true;
     vk_initialized = false;
