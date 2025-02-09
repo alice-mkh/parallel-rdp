@@ -4,7 +4,6 @@ set(CMAKE_C_STANDARD 99)
 project(parallel-rdp LANGUAGES CXX C)
 
 set(NAME_PLUGIN_M64P "mupen64plus-video-parallel")
-include_directories(../mupen64plus-core/src/api)
 add_definitions(-DM64P_PLUGIN_API -DGRANITE_VULKAN_MT)
 
 cmake_policy(SET CMP0072 NEW)
@@ -69,6 +68,9 @@ add_library(${NAME_PLUGIN_M64P} SHARED
     gfx_m64p.c
     glguts.c
     parallel_imp.cpp)
+
+include(GNUInstallDirs)
+install(TARGETS ${NAME_PLUGIN_M64P} LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/mupen64plus")
 
 target_include_directories(${NAME_PLUGIN_M64P} PUBLIC
     parallel-rdp

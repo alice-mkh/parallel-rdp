@@ -51,8 +51,8 @@
 #include "glguts.h"
 #include "parallel_imp.h"
 
-#include "m64p_types.h"
-#include "m64p_config.h"
+#include <mupen64plus/m64p_types.h>
+#include <mupen64plus/m64p_config.h>
 
 #include <string.h>
 #include <stdint.h>

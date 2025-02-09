@@ -1,6 +1,6 @@
 #pragma once
 
-#include "m64p_vidext.h"
+#include <mupen64plus/m64p_vidext.h>
 #include <stdint.h>
 #include <stdbool.h>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "m64p_plugin.h"
-#include "m64p_common.h"
+#include <mupen64plus/m64p_plugin.h>
+#include <mupen64plus/m64p_common.h>
 
 #ifdef _WIN32
 #define DLSYM(a, b) GetProcAddress(a, b)
