@@ -47,9 +47,9 @@
 #include <ctype.h>
 #include <stdarg.h>
 
-#include "gfx_m64p.h"
-#include "glguts.h"
-#include "parallel_imp.h"
+#include "gfx_m64p.hpp"
+#include "glguts.hpp"
+#include "parallel_imp.hpp"
 
 #include <mupen64plus/m64p_types.h>
 #include <mupen64plus/m64p_config.h>
@@ -324,7 +324,7 @@ EXPORT void CALL ReadScreen2(void *dest, int *width, int *height, int front)
 
     if (dest)
     {
-        fb.pixels = dest;
+        fb.pixels = (video_pixel *) dest;
         screen_read(&fb, false);
     }
 }

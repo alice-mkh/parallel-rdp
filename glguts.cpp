@@ -1,6 +1,6 @@
-#include "glguts.h"
-#include "gfx_m64p.h"
-#include "parallel_imp.h"
+#include "glguts.hpp"
+#include "gfx_m64p.hpp"
+#include "parallel_imp.hpp"
 
 #include <stdlib.h>
 #include <string.h>

@@ -65,8 +65,8 @@ add_library(${NAME_PLUGIN_M64P} SHARED
     util/timeline_trace_file.cpp
     util/timer.cpp
     volk/volk.c
-    gfx_m64p.c
-    glguts.c
+    gfx_m64p.cpp
+    glguts.cpp
     parallel_imp.cpp)
 
 include(GNUInstallDirs)

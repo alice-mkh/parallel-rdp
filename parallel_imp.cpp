@@ -1,4 +1,4 @@
-#include "parallel_imp.h"
+#include "parallel_imp.hpp"
 #include <memory>
 #include <vector>
 #include "rdp_device.hpp"
@@ -76,12 +76,6 @@ void vk_rasterize()
 	opts.upscale_deinterlacing = !vk_interlacing;
 	opts.downscale_steps = vk_downscaling_steps;
 	opts.crop_overscan_pixels = vk_overscan;
-	if (vk_vertical_stretch)
-	{
-		opts.crop_rect.top = vk_vertical_stretch;
-		opts.crop_rect.bottom = vk_vertical_stretch;
-		opts.crop_rect.enable = true;
-	}
 
 	RDP::VIScanoutBuffer scanout;
 	frontend->scanout_async_buffer(scanout, opts);

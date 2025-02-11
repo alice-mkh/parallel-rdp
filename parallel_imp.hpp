@@ -1,7 +1,7 @@
 
-#include "gfx_m64p.h"
-#include "glguts.h"
-#include "gfxstructdefs.h"
+#include "gfx_m64p.hpp"
+#include "glguts.hpp"
+#include "gfxstructdefs.hpp"
 
 #ifdef __cplusplus
 extern "C"
