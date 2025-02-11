@@ -7,6 +7,8 @@ set(NAME_PLUGIN_M64P "mupen64plus-video-parallel")
 include_directories(../mupen64plus-core/src/api)
 add_definitions(-DM64P_PLUGIN_API -DGRANITE_VULKAN_MT)
 
+cmake_policy(SET CMP0072 NEW)
+
 # check for INTERPROCEDURAL_OPTIMIZATION support
 if((${CMAKE_VERSION} VERSION_EQUAL 3.9) OR (${CMAKE_VERSION} VERSION_GREATER 3.9))
     cmake_policy(SET CMP0069 NEW)
@@ -22,8 +24,9 @@ if(ENABLE_IPO AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
 
+find_package(OpenGL REQUIRED)
+
 if(WIN32)
-    find_package(OpenGL REQUIRED)
     add_definitions(-DVK_USE_PLATFORM_WIN32_KHR)
 endif()
 
@@ -43,6 +46,7 @@ add_library(${NAME_PLUGIN_M64P} SHARED
     vulkan/fence.cpp
     vulkan/fence_manager.cpp
     vulkan/image.cpp
+    vulkan/indirect_layout.cpp
     vulkan/memory_allocator.cpp
     vulkan/pipeline_event.cpp
     vulkan/query_pool.cpp
@@ -51,13 +55,16 @@ add_library(${NAME_PLUGIN_M64P} SHARED
     vulkan/semaphore.cpp
     vulkan/semaphore_manager.cpp
     vulkan/shader.cpp
-    vulkan/texture_format.cpp
+    vulkan/texture/texture_format.cpp
+    vulkan/wsi.cpp
+    util/aligned_alloc.cpp
+    util/arena_allocator.cpp
+    util/environment.cpp
     util/logging.cpp
     util/thread_id.cpp
-    util/aligned_alloc.cpp
-    util/timer.cpp
-    util/timeline_trace_file.cpp
     util/thread_name.cpp
+    util/timeline_trace_file.cpp
+    util/timer.cpp
     volk/volk.c
     gfx_m64p.c
     glguts.c
@@ -70,8 +77,10 @@ target_include_directories(${NAME_PLUGIN_M64P} PUBLIC
     vulkan-headers/include
     util)
 
+target_link_libraries(${NAME_PLUGIN_M64P} ${OPENGL_LIBRARIES})
+
 if(WIN32)
-    target_link_libraries(${NAME_PLUGIN_M64P} ${OPENGL_LIBRARIES} -lwinmm)
+    target_link_libraries(${NAME_PLUGIN_M64P} -lwinmm)
 endif()
 
 set_target_properties(${NAME_PLUGIN_M64P} PROPERTIES PREFIX "")
