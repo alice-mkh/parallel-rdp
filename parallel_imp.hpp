@@ -27,6 +27,8 @@ extern "C"
     bool vk_init();
     void vk_destroy();
 
+    bool parallel_rdp_is_supported();
+
 #ifdef __cplusplus
 }
 #endif

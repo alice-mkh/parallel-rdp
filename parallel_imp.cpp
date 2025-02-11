@@ -270,3 +270,35 @@ bool vk_init()
 	running = true;
 	return true;
 }
+
+bool parallel_rdp_is_supported()
+{
+	if (running)
+		return true;
+
+	context.reset(new Context);
+	device.reset(new Device);
+	frontend.reset();
+
+	if (!::Vulkan::Context::init_loader(nullptr))
+		return false;
+	if (!context->init_instance_and_device(nullptr, 0, nullptr, 0, 0))
+		return false;
+
+	device->set_context(*context);
+
+	auto &features = device->get_device_features();
+	if (!features.vk11_features.storageBuffer16BitAccess ||
+		!features.vk12_features.storageBuffer8BitAccess ||
+        !features.supports_external_memory_host) {
+		device.reset();
+		context.reset();
+
+		return false;
+	}
+
+	device.reset();
+	context.reset();
+
+	return true;
+}
