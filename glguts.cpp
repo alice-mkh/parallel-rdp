@@ -181,7 +181,7 @@ void screen_write(struct frame_buffer *fb)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex_width,
                      tex_height, 0, TEX_FORMAT, TEX_TYPE, fb->pixels);
 
-        window_width = tex_height * 4 / 3;
+        window_width = tex_width;
         window_height = tex_height;
         CoreVideo_SetVideoMode(window_width, window_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
     }
@@ -210,29 +210,8 @@ void screen_read(struct frame_buffer *fb, bool alpha)
 
 void gl_screen_render()
 {
-    display_width = (window_widescreen ? 854 : 640) * vk_rescaling;
-    display_height = 480 * vk_rescaling;
-
-    int win_width = window_width;
-    int win_height = window_height;
-    int win_x = 0;
-    int win_y = 0;
-    int32_t hw = display_height * win_width;
-    int32_t wh = display_width * win_height;
-
-    // add letterboxes or pillarboxes if the window has a different aspect ratio
-    // than the current display mode
-    if (hw > wh) {
-        int32_t w_max = wh / display_height;
-        win_x += (win_width - w_max) / 2;
-        win_width = w_max;
-    } else if (hw < wh) {
-        int32_t h_max = hw / display_width;
-        win_y += (win_height - h_max) / 2;
-        win_height = h_max;
-    }
     // configure viewport
-    glViewport(win_x, win_y, win_width, win_height);
+    glViewport(0, 0, window_width, window_height);
 
     // draw fullscreen triangle
     glDrawArrays(GL_TRIANGLES, 0, 3);
