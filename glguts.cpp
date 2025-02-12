@@ -50,6 +50,7 @@ static PFNGLUNIFORM1IPROC glUniform1i;
 
 static bool toggle_fs;
 static int rotate_buffer;
+static int skip_frames;
 
 // framebuffer texture states
 int32_t window_width;
@@ -169,6 +170,7 @@ void screen_write(struct frame_buffer *fb)
     bool buffer_size_changed = tex_width != fb->width || tex_height != fb->height;
 
     glBindTexture(GL_TEXTURE_2D, texture);
+
     // check if the framebuffer size has changed
     if (buffer_size_changed)
     {
@@ -181,9 +183,7 @@ void screen_write(struct frame_buffer *fb)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex_width,
                      tex_height, 0, TEX_FORMAT, TEX_TYPE, fb->pixels);
 
-        window_width = tex_width;
-        window_height = tex_height;
-        CoreVideo_SetVideoMode(window_width, window_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
+        CoreVideo_SetVideoMode(tex_width, tex_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
     }
     else
     {
@@ -211,7 +211,7 @@ void screen_read(struct frame_buffer *fb, bool alpha)
 void gl_screen_render()
 {
     // configure viewport
-    glViewport(0, 0, window_width, window_height);
+    glViewport(0, 0, tex_width, tex_height);
 
     // draw fullscreen triangle
     glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -235,6 +235,7 @@ void screen_init()
 {
     tex_width = tex_height = 0;
     toggle_fs = false;
+    skip_frames = 1;
 
     /* Get the core Video Extension function pointers from the library handle */
     CoreVideo_Init = (ptr_VidExt_Init)DLSYM(CoreLibHandle, "VidExt_Init");
@@ -254,8 +255,6 @@ void screen_init()
     CoreVideo_GL_SetAttribute(M64P_GL_CONTEXT_PROFILE_MASK, M64P_GL_CONTEXT_PROFILE_CORE);
     CoreVideo_GL_SetAttribute(M64P_GL_CONTEXT_MAJOR_VERSION, 3);
     CoreVideo_GL_SetAttribute(M64P_GL_CONTEXT_MINOR_VERSION, 3);
-
-    CoreVideo_SetVideoMode(window_width, window_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
 
     CoreVideo_SetCaption("Mupen64Plus-Parallel");
 
@@ -329,6 +328,12 @@ void screen_swap(bool blank)
     {
         CoreVideo_ToggleFullScreen();
         toggle_fs = false;
+    }
+
+    if (skip_frames > 0)
+    {
+        skip_frames--;
+        return;
     }
 
     gl_screen_clear();
