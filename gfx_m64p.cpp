@@ -158,6 +158,10 @@ public:
             buf[buf_len - 1] = '\0';
         }
 
+        // downgrade stalled compile warnings to info
+        if (level == M64MSG_WARNING && strncmp(buf, "Stalled compile", 15) == 0)
+            level = M64MSG_INFO;
+
         DebugMessage(level, buf);
         return true;
     }
