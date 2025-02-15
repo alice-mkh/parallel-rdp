@@ -21,7 +21,7 @@ bool vk_ssreadbacks;
 bool vk_ssdither;
 bool running = false;
 unsigned width, height;
-unsigned vk_overscan;
+unsigned vk_overscan_v, vk_overscan_h;
 unsigned vk_downscaling_steps;
 bool vk_native_texture_lod;
 bool vk_native_tex_rect;
@@ -75,7 +75,11 @@ void vk_rasterize()
 	opts.blend_previous_frame = vk_interlacing;
 	opts.upscale_deinterlacing = !vk_interlacing;
 	opts.downscale_steps = vk_downscaling_steps;
-	opts.crop_overscan_pixels = vk_overscan;
+	opts.crop_rect.enable = true;
+	opts.crop_rect.top = vk_overscan_v;
+	opts.crop_rect.bottom = vk_overscan_v;
+	opts.crop_rect.left = vk_overscan_h;
+	opts.crop_rect.right = vk_overscan_h;
 
 	RDP::VIScanoutBuffer scanout;
 	frontend->scanout_async_buffer(scanout, opts);

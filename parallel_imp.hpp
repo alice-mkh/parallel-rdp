@@ -12,7 +12,7 @@ extern "C"
     extern bool vk_ssreadbacks;
     extern bool vk_ssdither;
 
-    extern unsigned vk_overscan;
+    extern unsigned vk_overscan_v, vk_overscan_h;
     extern unsigned vk_downscaling_steps;
     extern bool vk_native_texture_lod;
     extern bool vk_native_tex_rect;

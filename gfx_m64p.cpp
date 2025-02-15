@@ -30,7 +30,8 @@
 #define KEY_WIDESCREEN "WidescreenStretch"
 #define KEY_SSDITHER "SuperscaledDither"
 #define KEY_SSREADBACKS "SuperscaledReads"
-#define KEY_OVERSCANCROP "CropOverscan"
+#define KEY_OVERSCANCROPV "CropOverscanV"
+#define KEY_OVERSCANCROPH "CropOverscanH"
 #define KEY_DIVOT "Divot"
 #define KEY_GAMMADITHER "GammaDither"
 #define KEY_AA "VIAA"
@@ -201,7 +202,8 @@ EXPORT m64p_error CALL PluginStartup(m64p_dynlib_handle _CoreLibHandle, void *Co
     ConfigSetDefaultBool(configVideoParallel, KEY_SSREADBACKS, 0, "Enable superscaling of readbacks when upsampling");
     ConfigSetDefaultBool(configVideoParallel, KEY_SSDITHER, 1, "Enable superscaling of dithering when upsampling");
     ConfigSetDefaultBool(configVideoParallel, KEY_SYNCHRONOUS, 1, "Enable synchronizing RDP and CPU");
-    ConfigSetDefaultInt(configVideoParallel, KEY_OVERSCANCROP, 0, "Amount of overscan pixels to crop");
+    ConfigSetDefaultInt(configVideoParallel, KEY_OVERSCANCROPV, 8, "Amount of overscan pixels to crop (top and bottom)");
+    ConfigSetDefaultInt(configVideoParallel, KEY_OVERSCANCROPH, 8, "Amount of overscan pixels to crop (left and right)");
     ConfigSetDefaultBool(configVideoParallel, KEY_AA, 1, "VI anti-aliasing, smooths polygon edges.");
     ConfigSetDefaultBool(configVideoParallel, KEY_DIVOT, 1, "Allow VI divot filter, cleans up stray black pixels.");
     ConfigSetDefaultBool(configVideoParallel, KEY_GAMMADITHER, 1, "Allow VI gamma dither");
@@ -307,7 +309,8 @@ EXPORT int CALL RomOpen(void)
     vk_native_tex_rect = ConfigGetParamBool(configVideoParallel, KEY_NATIVETEXTRECT);
     vk_interlacing = ConfigGetParamBool(configVideoParallel, KEY_DEINTERLACE);
     vk_downscaling_steps = ConfigGetParamInt(configVideoParallel, KEY_DOWNSCALE);
-    vk_overscan = ConfigGetParamInt(configVideoParallel, KEY_OVERSCANCROP);
+    vk_overscan_v = ConfigGetParamInt(configVideoParallel, KEY_OVERSCANCROPV);
+    vk_overscan_h = ConfigGetParamInt(configVideoParallel, KEY_OVERSCANCROPH);
 
     vk_synchronous = ConfigGetParamBool(configVideoParallel, KEY_SYNCHRONOUS);
 
