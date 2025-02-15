@@ -183,7 +183,9 @@ void screen_write(struct frame_buffer *fb)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex_width,
                      tex_height, 0, TEX_FORMAT, TEX_TYPE, fb->pixels);
 
-        CoreVideo_SetVideoMode(tex_width, tex_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
+        window_width = tex_height * 4 / 3;
+        window_height = tex_height;
+        CoreVideo_SetVideoMode(window_width, window_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
     }
     else
     {
@@ -211,7 +213,7 @@ void screen_read(struct frame_buffer *fb, bool alpha)
 void gl_screen_render()
 {
     // configure viewport
-    glViewport(0, 0, tex_width, tex_height);
+    glViewport(0, 0, window_width, window_height);
 
     // draw fullscreen triangle
     glDrawArrays(GL_TRIANGLES, 0, 3);
