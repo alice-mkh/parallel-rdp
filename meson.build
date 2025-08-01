@@ -8,7 +8,6 @@ plugins_dir = prefix / libdir / 'mupen64plus'
 
 add_project_arguments([
   '-DM64P_PLUGIN_API',
-  '-DGRANITE_VULKAN_MT',
   '-Wno-missing-field-initializers',
   '-Wno-unused-variable',
   '-Wno-sign-compare',
