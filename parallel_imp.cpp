@@ -101,13 +101,13 @@ void vk_rasterize()
 		buf.pixels = (video_pixel*)device->map_host_buffer(*scanout.buffer, Vulkan::MEMORY_ACCESS_READ_BIT);
 
 		// write fb to screen
-		screen_write(&buf);
+		bool size_changed = screen_write(&buf);
 
 		// unmap buffer
 		device->unmap_host_buffer(*scanout.buffer, Vulkan::MEMORY_ACCESS_READ_BIT);
 
 		// update screen
-		screen_swap(false);
+		screen_swap(size_changed);
 	}
 }
 
