@@ -182,6 +182,8 @@ bool screen_write(struct frame_buffer *fb)
         // reallocate texture buffer on GPU
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex_width,
                      tex_height, 0, TEX_FORMAT, TEX_TYPE, fb->pixels);
+
+        CoreVideo_SetVideoMode(window_width, window_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
     }
     else
     {
