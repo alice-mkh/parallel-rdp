@@ -50,7 +50,6 @@ static PFNGLUNIFORM1IPROC glUniform1i;
 
 static bool toggle_fs;
 static int rotate_buffer;
-static int skip_frames;
 
 // framebuffer texture states
 int32_t window_width;
@@ -237,7 +236,6 @@ void screen_init()
 {
     tex_width = tex_height = 0;
     toggle_fs = false;
-    skip_frames = 1;
 
     /* Get the core Video Extension function pointers from the library handle */
     CoreVideo_Init = (ptr_VidExt_Init)DLSYM(CoreLibHandle, "VidExt_Init");
@@ -330,12 +328,6 @@ void screen_swap(bool blank)
     {
         CoreVideo_ToggleFullScreen();
         toggle_fs = false;
-    }
-
-    if (skip_frames > 0)
-    {
-        skip_frames--;
-        return;
     }
 
     gl_screen_clear();
