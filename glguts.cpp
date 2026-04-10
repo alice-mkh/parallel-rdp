@@ -256,6 +256,8 @@ void screen_init()
     CoreVideo_GL_SetAttribute(M64P_GL_CONTEXT_MAJOR_VERSION, 3);
     CoreVideo_GL_SetAttribute(M64P_GL_CONTEXT_MINOR_VERSION, 3);
 
+    CoreVideo_SetVideoMode(window_width, window_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
+
     CoreVideo_SetCaption("Mupen64Plus-Parallel");
 
     glCreateShader = (PFNGLCREATESHADERPROC) CoreVideo_GL_GetProcAddress("glCreateShader");
