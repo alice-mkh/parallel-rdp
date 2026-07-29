@@ -22,6 +22,7 @@ static ptr_VidExt_GL_GetProcAddress CoreVideo_GL_GetProcAddress = NULL;
 static ptr_VidExt_GL_SetAttribute CoreVideo_GL_SetAttribute = NULL;
 static ptr_VidExt_GL_GetAttribute CoreVideo_GL_GetAttribute = NULL;
 static ptr_VidExt_GL_SwapBuffers CoreVideo_GL_SwapBuffers = NULL;
+static ptr_VidExt_GL_GetDefaultFramebuffer CoreVideo_GL_GetDefaultFramebuffer = NULL;
 
 static PFNGLCREATESHADERPROC glCreateShader;
 static PFNGLSHADERSOURCEPROC glShaderSource;
@@ -40,6 +41,7 @@ static PFNGLUSEPROGRAMPROC glUseProgram;
 static PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
 static PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
 static PFNGLBINDBUFFERPROC glBindBuffer;
+static PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer;
 static PFNGLGENBUFFERSPROC glGenBuffers;
 static PFNGLDELETEBUFFERSPROC glDeleteBuffers;
 static PFNGLBUFFERSTORAGEPROC glBufferStorage;
@@ -211,6 +213,10 @@ void screen_read(struct frame_buffer *fb, bool alpha)
 
 void gl_screen_render()
 {
+    glBindVertexArray(vao);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUseProgram(program);
+
     // configure viewport
     glViewport(0, 0, window_width, window_height);
 
@@ -249,6 +255,7 @@ void screen_init()
     CoreVideo_GL_SetAttribute = (ptr_VidExt_GL_SetAttribute)DLSYM(CoreLibHandle, "VidExt_GL_SetAttribute");
     CoreVideo_GL_GetAttribute = (ptr_VidExt_GL_GetAttribute)DLSYM(CoreLibHandle, "VidExt_GL_GetAttribute");
     CoreVideo_GL_SwapBuffers = (ptr_VidExt_GL_SwapBuffers)DLSYM(CoreLibHandle, "VidExt_GL_SwapBuffers");
+    CoreVideo_GL_GetDefaultFramebuffer = (ptr_VidExt_GL_GetDefaultFramebuffer)DLSYM(CoreLibHandle, "VidExt_GL_GetDefaultFramebuffer");
 
     CoreVideo_Init();
 
@@ -277,6 +284,7 @@ void screen_init()
     glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC) CoreVideo_GL_GetProcAddress("glGenVertexArrays");
     glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC) CoreVideo_GL_GetProcAddress("glBindVertexArray");
     glBindBuffer = (PFNGLBINDBUFFERPROC) CoreVideo_GL_GetProcAddress("glBindBuffer");
+    glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC) CoreVideo_GL_GetProcAddress("glBindFramebuffer");
     glGenBuffers = (PFNGLGENBUFFERSPROC) CoreVideo_GL_GetProcAddress("glGenBuffers");
     glDeleteBuffers = (PFNGLDELETEBUFFERSPROC) CoreVideo_GL_GetProcAddress("glDeleteBuffers");
     glBufferStorage = (PFNGLBUFFERSTORAGEPROC) CoreVideo_GL_GetProcAddress("glBufferStorage");
@@ -319,6 +327,8 @@ void screen_init()
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, CoreVideo_GL_GetDefaultFramebuffer());
 
     // check if there was an error when using any of the commands above
     gl_check_errors();
