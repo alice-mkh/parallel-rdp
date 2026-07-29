@@ -75,7 +75,7 @@ int display_height;
 static void gl_check_errors(void)
 {
     GLenum err;
-    static int32_t invalid_op_count = 0;
+    int32_t invalid_op_count = 0;
     while ((err = glGetError()) != GL_NO_ERROR)
     {
         // if gl_check_errors is called from a thread with no valid
@@ -86,7 +86,7 @@ static void gl_check_errors(void)
         {
             if (++invalid_op_count >= 100)
             {
-                printf("gl_check_errors: invalid OpenGL context!");
+                printf("gl_check_errors: invalid OpenGL context!\n");
             }
         }
         else
@@ -94,7 +94,7 @@ static void gl_check_errors(void)
             invalid_op_count = 0;
         }
 
-        char *err_str;
+        const char *err_str;
         switch (err)
         {
         case GL_INVALID_OPERATION:
@@ -115,7 +115,7 @@ static void gl_check_errors(void)
         default:
             err_str = "unknown";
         }
-        printf("gl_check_errors: %d (%s)", err, err_str);
+        printf("gl_check_errors: %d (%s)\n", err, err_str);
     }
 }
 #else
