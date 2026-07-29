@@ -1,3 +1,22 @@
+# parallel-RDP (Highscore patches)
+
+Based on the Mupen64Plus-ified version of parallel-RDP from Rosalie's Mupen GUI (RMG)
+
+This version uses GL for rendering instead of Vulkan, and has a few fixes for
+Highscore use:
+
+- Use whatever aspect ratio the window is, rather than letterboxing the output,
+  since we want to use 640x240 / 640x288, and handle deinterlacing on the frontend side
+
+- Use GetDefaultFramebuffer() instead of assuming it will be already bound
+
+Additionally, just to make things more convenient:
+
+- Ported the glue code to C++
+- Ported from CMake to Meson
+
+Original: https://github.com/Rosalie241/parallel-rdp-standalone/commits/RMG/
+
 # paraLLEl-RDP
 
 This project is a revival and complete rewrite of the old, defunct paraLLEl-RDP project.
