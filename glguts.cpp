@@ -208,6 +208,8 @@ void screen_read(struct frame_buffer *fb, bool alpha)
 
 void gl_screen_render()
 {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, CoreVideo_GL_GetDefaultFramebuffer());
+
     glBindVertexArray(vao);
     glBindTexture(GL_TEXTURE_2D, texture);
     glUseProgram(program);
@@ -221,6 +223,8 @@ void gl_screen_render()
 
 void gl_screen_clear(void)
 {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, CoreVideo_GL_GetDefaultFramebuffer());
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -322,8 +326,6 @@ void screen_init()
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, CoreVideo_GL_GetDefaultFramebuffer());
 
     // check if there was an error when using any of the commands above
     gl_check_errors();
