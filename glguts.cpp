@@ -166,12 +166,11 @@ static GLuint gl_shader_link(GLuint vert, GLuint frag)
     return program;
 }
 
-bool screen_write(struct frame_buffer *fb)
+void screen_write(struct frame_buffer *fb)
 {
     bool buffer_size_changed = tex_width != fb->width || tex_height != fb->height;
 
     glBindTexture(GL_TEXTURE_2D, texture);
-
     // check if the framebuffer size has changed
     if (buffer_size_changed)
     {
@@ -183,8 +182,6 @@ bool screen_write(struct frame_buffer *fb)
         // reallocate texture buffer on GPU
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, tex_width,
                      tex_height, 0, TEX_FORMAT, TEX_TYPE, fb->pixels);
-
-        CoreVideo_SetVideoMode(window_width, window_height, 0, window_fullscreen ? M64VIDEO_FULLSCREEN : M64VIDEO_WINDOWED, M64VIDEOFLAG_SUPPORT_RESIZING);
     }
     else
     {
@@ -192,8 +189,6 @@ bool screen_write(struct frame_buffer *fb)
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, tex_width, tex_height,
                         TEX_FORMAT, TEX_TYPE, fb->pixels);
     }
-
-    return buffer_size_changed;
 }
 
 void screen_read(struct frame_buffer *fb, bool alpha)
